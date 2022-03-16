@@ -73,9 +73,8 @@ const App: () => Node = () => {
    * set background style to factor in dark mode
    */
   const backgroundStyle = {
-    backgroundColor: 'red',
     color: isDarkMode ? Colors.white : Colors.black,
-    height: Dimensions.get('screen').height
+    backgroundColor: '#4a5d80'
   };
 
   /**
@@ -107,10 +106,10 @@ const App: () => Node = () => {
    */
   return (
     <SafeAreaView style={[backgroundStyle]}>
-      <StatusBar barStyle={'light-content'} backgroundColor='transparent' translucent />
+      <StatusBar barStyle={'light-content'} backgroundColor='#4a5d80' />
       <ScrollView
         contentInsetAdjustmentBehavior="automatic"
-        style={[{ height: Dimensions.get("window").height, backgroundColor: Colors.white }]}
+        style={[{ height: Dimensions.get("screen").height }]}
       >
         {/* <Header /> */}
         <View style={[styles.header]}>

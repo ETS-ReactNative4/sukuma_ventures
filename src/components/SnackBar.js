@@ -104,7 +104,6 @@ class SnackBar extends Component {
     }
 
     handleUserClick = () => {
-        console.log("Click")
         this.setState({ SnackBarInsideMsgHolder: "User clicked snackbar" });
     }
 

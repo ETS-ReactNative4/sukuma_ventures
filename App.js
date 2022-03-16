@@ -57,18 +57,8 @@ const Section = ({ children, title }): Node => {
 
 
 const openSnackBar = (snackBar) => {
-  // Snackbar.show({
-  //   text: 'Hello world',
-  //   duration: Snackbar.LENGTH_INDEFINITE,
-  //   action: {
-  //     text: 'UNDO',
-  //     textColor: 'green',
-  //     onPress: () => { /* Do something. */ },
-  //   },
-  // });
-  console.log("hello", snackBar);
-  snackBar.current.ShowSnackBarFunction("This is a snackbar to show to the user when they perform an action. Clicking it should change the text");
 
+  snackBar.current.ShowSnackBarFunction("This is a snackbar to show to the user when they perform an action. Clicking it should change the text");
 
 };
 
@@ -83,8 +73,9 @@ const App: () => Node = () => {
    * set background style to factor in dark mode
    */
   const backgroundStyle = {
-    backgroundColor: isDarkMode ? Colors.darker : Colors.lighter,
-    color: isDarkMode ? Colors.white : Colors.black
+    backgroundColor: 'red',
+    color: isDarkMode ? Colors.white : Colors.black,
+    height: Dimensions.get('screen').height
   };
 
   /**
@@ -116,10 +107,10 @@ const App: () => Node = () => {
    */
   return (
     <SafeAreaView style={[backgroundStyle]}>
-      <StatusBar barStyle={isDarkMode ? 'light-content' : 'dark-content'} />
+      <StatusBar barStyle={'light-content'} backgroundColor='transparent' translucent />
       <ScrollView
         contentInsetAdjustmentBehavior="automatic"
-        style={[backgroundStyle, { height: Dimensions.get("screen").height, backgroundColor: '#4a5d80' }]}
+        style={[{ height: Dimensions.get("window").height, backgroundColor: Colors.white }]}
       >
         {/* <Header /> */}
         <View style={[styles.header]}>
@@ -152,12 +143,7 @@ const App: () => Node = () => {
 
 
           <View style={[styles.py3, styles.pb4]}>
-            {/* <Button
-              onPress={() => console.log("Hello")}
-              title="Show Snackbar"
-              color="#80e972"
-              accessibilityLabel="Show snackbar"
-            /> */}
+
             <TouchableOpacity
               style={styles.button}
               onPress={() => openSnackBar(snackBar)}
@@ -283,7 +269,8 @@ const styles = StyleSheet.create({
     display: "flex", 
     backgroundColor: '#4a5d80', 
     justifyContent: "center", 
-    paddingHorizontal: 24 
+    paddingHorizontal: 24,
+    paddingTop: 16
   },
   finishBtn: { 
     color: 'black', 

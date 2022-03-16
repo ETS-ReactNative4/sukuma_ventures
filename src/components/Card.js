@@ -23,8 +23,8 @@ const styles = StyleSheet.create({
   card: {
     shadowRadius: 16,
     backgroundColor: 'white',
-    elevation: 4,
-    shadowColor: 'gray'
+    elevation: 8,
+    shadowColor: 'gray',
   },
   text: {
     color: 'red',

@@ -6,7 +6,7 @@
  * @flow strict-local
  */
 
-import React from 'react';
+import React, { useRef } from 'react';
 import type { Node } from 'react';
 import {
   SafeAreaView,
@@ -17,18 +17,17 @@ import {
   useColorScheme,
   View,
   Dimensions,
-  Button,
   TouchableOpacity
 } from 'react-native';
 
 import {
   Colors,
-  DebugInstructions,
-  Header,
-  LearnMoreLinks,
-  ReloadInstructions,
 } from 'react-native/Libraries/NewAppScreen';
 import Card from './src/components/Card';
+import SnackBar from './src/components/SnackBar';
+import Icon from 'react-native-vector-icons/FontAwesome';
+
+// import Snackbar from 'react-native-snackbar';
 
 const Section = ({ children, title }): Node => {
   const isDarkMode = useColorScheme() === 'dark';
@@ -57,13 +56,32 @@ const Section = ({ children, title }): Node => {
 };
 
 
-const openSnackBar = () => {
-  console.log("Hello")
+const openSnackBar = (snackBar) => {
+  // Snackbar.show({
+  //   text: 'Hello world',
+  //   duration: Snackbar.LENGTH_INDEFINITE,
+  //   action: {
+  //     text: 'UNDO',
+  //     textColor: 'green',
+  //     onPress: () => { /* Do something. */ },
+  //   },
+  // });
+  console.log("hello", snackBar);
+  snackBar.current.ShowSnackBarFunction("This is a snackbar to show to the user when they perform an action. Clicking it should change the text");
+
+
 };
+
 
 const App: () => Node = () => {
   const isDarkMode = useColorScheme() === 'dark';
 
+  const snackBar = useRef(null);
+
+
+  /**
+   * set background style to factor in dark mode
+   */
   const backgroundStyle = {
     backgroundColor: isDarkMode ? Colors.darker : Colors.lighter,
     color: isDarkMode ? Colors.white : Colors.black
@@ -82,17 +100,20 @@ const App: () => Node = () => {
           <Text style={styles.textBlack}>{props.goal.title}</Text>
           <Text style={{ color: 'gray' }}>{props.goal.amount}</Text>
         </View>
-        <View style={[{ height: '100%', display: 'flex', flexDirection: 'row', alignItems: 'center', justifyContent: "center" }]}>
-          <Text style={{ color: 'black', backgroundColor: '#80e972', padding: 8, borderRadius: 8, marginHorizontal: 8 }}>Finish Goal</Text>
+        <View style={[styles.goalCard]}>
+          <Text style={[styles.finishBtn]}>Finish Goal</Text>
 
-          <View style={[{ borderLeftColor: 'gray', borderLeftWidth: 1, height: '100%', display: 'flex', flexDirection: 'row', alignItems: 'center', justifyContent: "center" }]}>
-            <Text style={[styles.pl1,styles.textBlack]}> {`>`} </Text>
+          <View style={[styles.goalCardMore]}>
+            <Text style={[styles.pl1, styles.textBlack]}>  <Icon name="chevron-right" size={16} color="#000" />  </Text>
           </View>
         </View>
       </View>)
   }
 
 
+  /**
+   * Render the ui element
+   */
   return (
     <SafeAreaView style={[backgroundStyle]}>
       <StatusBar barStyle={isDarkMode ? 'light-content' : 'dark-content'} />
@@ -101,11 +122,11 @@ const App: () => Node = () => {
         style={[backgroundStyle, { height: Dimensions.get("screen").height, backgroundColor: '#4a5d80' }]}
       >
         {/* <Header /> */}
-        <View style={[{ minHeight: Dimensions.get("window").height * 0.25, display: "flex", backgroundColor: '#4a5d80', justifyContent: "center", paddingHorizontal: 24 }]}>
-          <Text style={[styles.textSize6]}>Afternoon Jo</Text>
-          <Text style={[styles.textSize2]}>Here is the latest</Text>
-          <Text style={[styles.textSize4, styles.textGreen]}>KES 42,000</Text>
-          <Text style={[styles.textSize3]}>Total funds</Text>
+        <View style={[styles.header]}>
+          <Text style={[styles.textWhite, styles.textSize6]}>Afternoon Jo</Text>
+          <Text style={[styles.textWhite, styles.textSize2, styles.my1]}>Here is the latest</Text>
+          <Text style={[styles.textSize4, styles.textGreen, styles.bold]}>KES 42,000</Text>
+          <Text style={[styles.textWhite, styles.textSize3]}>Total funds</Text>
         </View>
         <View
           style={[styles.roundedTop, {
@@ -116,34 +137,40 @@ const App: () => Node = () => {
           }]}>
 
           <View style={[{ flexGrow: 1 }]}>
+            <Text style={[styles.textBlack, styles.bold, styles.p2]}>Your Goals</Text>
+
             <Card body={
-              <GoalItem goal={{title: 'Goal 1', amount: 'KES 12,000'}}/>
+              <GoalItem goal={{ title: 'Goal 1', amount: 'KES 12,000' }} />
             } />
 
             <Card body={
-              <GoalItem goal={{title: 'Goal 2', amount: 'KES 11,000'}}/>
+              <GoalItem goal={{ title: 'Goal 2', amount: 'KES 11,000' }} />
             } />
 
           </View>
 
-     
 
-          <View style={[styles.p2, styles.pb4]}>
+
+          <View style={[styles.py3, styles.pb4]}>
             {/* <Button
               onPress={() => console.log("Hello")}
               title="Show Snackbar"
               color="#80e972"
               accessibilityLabel="Show snackbar"
             /> */}
-                 <TouchableOpacity
-          style={styles.button}
-          onPress={() => console.log("Hello")}
-        >
-          <Text style={styles.textBlack}>Press Here</Text>
-        </TouchableOpacity>
+            <TouchableOpacity
+              style={styles.button}
+              onPress={() => openSnackBar(snackBar)}
+            >
+              <Text style={[styles.textWhite, { textAlign: 'center' }]}>Show Snackbar</Text>
+            </TouchableOpacity>
+
+
           </View>
 
         </View>
+        <SnackBar ref={snackBar} />
+
       </ScrollView>
     </SafeAreaView>
   );
@@ -167,25 +194,37 @@ const styles = StyleSheet.create({
     fontWeight: '700',
   },
   p2: {
-    paddingHorizontal: 16,
+    padding: 16,
+  },
+  p3: {
+    padding: 24,
+  },
+  py3: {
+    paddingHorizontal: 24,
   },
   py2: {
     paddingVertical: 16,
   },
-  px1:{
+  px1: {
     paddingHorizontal: 4
   },
-  pl1:{
+  pl1: {
     paddingLeft: 4
   },
   pb4: {
     paddingBottom: 32,
+  },
+  my1: {
+    marginVertical: 8,
   },
   m2: {
     marginHorizontal: 16,
   },
   m3: {
     marginBottom: 24,
+  },
+  bold: {
+    fontWeight: 'bold'
   },
   roundedTop: {
     borderTopEndRadius: 16,
@@ -196,29 +235,62 @@ const styles = StyleSheet.create({
   flexGrow: {
     flexGrow: 1
   },
-  textBlack:{
-    color:'black'
+  textBlack: {
+    color: 'black'
   },
-  textSize6:{
+  textSize6: {
     fontSize: 36
   },
-  textSize2:{
+  textSize2: {
     fontSize: 12
   },
-  textSize4:{    
+  textSize4: {
     fontSize: 24
   },
-  textSize3:{
+  textSize3: {
     fontSize: 18
   },
-  textGreen:{
+  textGreen: {
     color: '#80e972',
   },
-  button:{
+  textWhite: {
+    color: '#fff',
+  },
+  button: {
     width: '100%',
     backgroundColor: '#80e972',
     padding: 16,
     borderRadius: 24
+  },
+  goalCard: { 
+    height: '100%',
+    display: 'flex', 
+    flexDirection: 'row', 
+    alignItems: 'center', 
+    justifyContent: "center" 
+  },
+  goalCardMore: { 
+    borderLeftColor: '#D5D5D5', 
+    borderLeftWidth: 1, 
+    height: '100%', 
+    display: 'flex', 
+    flexDirection: 'row', 
+    alignItems: 'center', 
+    justifyContent: "center" 
+  },
+  header: { 
+    minHeight: Dimensions.get("window").height * 0.25, 
+    display: "flex", 
+    backgroundColor: '#4a5d80', 
+    justifyContent: "center", 
+    paddingHorizontal: 24 
+  },
+  finishBtn: { 
+    color: 'black', 
+    backgroundColor: '#80e972', 
+    padding: 8, 
+    borderRadius: 8, 
+    marginHorizontal: 8 
   }
 });
 
